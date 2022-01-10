@@ -14,7 +14,7 @@ function createSvg() {
   svg.setAttribute('height', 200);
   svg.setAttribute('width', 200);
   svg.setAttribute('transform', 'rotate(-90)');
-  
+
   let offset = 0;
   const totalSum = options.reduce((acc, current) => acc + current.weight, 0);
   const sections = options.map(option => {
@@ -23,7 +23,7 @@ function createSvg() {
     offset += optionWeight;
     return section;
   });
-  
+
   svg.append(...sections);
   document.body.appendChild(svg);
 }
@@ -38,7 +38,7 @@ function getSection(weight, offset) {
   circle.setAttribute('fill', 'transparent');
   circle.setAttribute('stroke', getRandomColor());
   circle.setAttribute('stroke-width', 100);
-  circle.setAttribute('stroke-dasharray', `calc(${weight} * 100 * 314.2 / 100) 314.2`);
+  circle.setAttribute('stroke-dasharray', `calc(${weight} * ${Math.PI} * 100) calc(${Math.PI} * 100)`);
   circle.setAttribute('transform-origin', 'center');
   circle.setAttribute('transform', `rotate(${rotateDeg})`);
 
