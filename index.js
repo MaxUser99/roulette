@@ -1,10 +1,11 @@
 const svgns = "http://www.w3.org/2000/svg";
 
 const options = [
-  { text: '', weight: 3 },
-  { text: '', weight: 1 },
-  { text: '', weight: 1 },
-  { text: '', weight: 1 },
+  { text: 'first', weight: 2 },
+  { text: 'first', weight: 2 },
+  { text: 'first', weight: 2 },
+  { text: 'second', weight: 1 },
+  { text: 'third', weight: 1 },
 ];
 
 createSvg();
@@ -13,24 +14,27 @@ function createSvg() {
   const svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('height', 200);
   svg.setAttribute('width', 200);
-  svg.setAttribute('transform', 'rotate(-90)');
 
-  let offset = 0;
+  let offset = -0.25;
   const totalSum = options.reduce((acc, current) => acc + current.weight, 0);
-  const sections = options.map(option => {
+  const sections = [];
+  const lines = [];
+  options.forEach(option => {
     const optionWeight = option.weight / totalSum;
-    const section = getSection(optionWeight, offset);
+    const { circle, line } = getSection(optionWeight, offset, option.text);
+    sections.push(circle);
+    lines.push(line);
     offset += optionWeight;
-    return section;
   });
 
   svg.append(...sections);
+  svg.append(...lines);
   document.body.appendChild(svg);
 }
 
-function getSection(weight, offset) {
+function getSection(weight, offset, text) {
   const rotateDeg = 360 * offset;
-
+  
   const circle = document.createElementNS(svgns, 'circle');
   circle.setAttribute('r', 50);
   circle.setAttribute('cx', 100);
@@ -42,7 +46,14 @@ function getSection(weight, offset) {
   circle.setAttribute('transform-origin', 'center');
   circle.setAttribute('transform', `rotate(${rotateDeg})`);
 
-  return circle;
+  const line = document.createElementNS(svgns, 'line');
+  line.setAttribute('stroke', 'black');
+  line.setAttribute('x1', 100);
+  line.setAttribute('y1', 100);
+  line.setAttribute('x2', 100 + 100 * Math.cos((offset + weight / 2) * 2 * Math.PI));
+  line.setAttribute('y2', 100 + 100 * Math.sin((offset + weight / 2) * 2 * Math.PI));
+
+  return { circle, line };
 }
 
 function getRandomColor() {
