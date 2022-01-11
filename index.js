@@ -1,4 +1,5 @@
 const svgns = "http://www.w3.org/2000/svg";
+let svg;
 
 const options = [
   { text: 'second fd', weight: 1 },
@@ -12,21 +13,35 @@ createSvg();
 initializeButton();
 
 function initializeButton() {
-  const button = document.querySelector('button');
   let deg = 0;
-  button.onclick = () => {
-    const duration = 1500 + Math.random() * 1000;
-    document.documentElement.style.setProperty('--transition-duration', duration + 'ms')
 
+  const spinButton = document.querySelector('#spin-button');
+  spinButton.onclick = () => {
+    const duration = 1500 + Math.random() * 1000;
     deg += 20 * Math.abs(Math.round(Math.random() * 500));
-    const css = '-webkit-transform: rotate(' + deg + 'deg);';
-    const svg = document.querySelector('.roulette');
-    svg.setAttribute('style', css);
+    rotate(duration, deg);
+  };
+
+  const resetButton = document.querySelector('#reset-button');
+  resetButton.onclick = () => {
+    const resetDuration = 500; //ms
+    const currentTurns = Math.floor(deg / 360);
+    deg = (currentTurns + 1) * 360;
+    rotate(resetDuration, deg);
+    setTimeout(() => {
+      svg.setAttribute('style', 'transition: 0s');
+    }, resetDuration);
   };
 }
 
+function rotate(duration, deg) {
+  document.documentElement.style.setProperty('--transition-duration', duration + 'ms');
+  const css = '-webkit-transform: rotate(' + deg + 'deg);';
+  svg.setAttribute('style', css);
+}
+
 function createSvg() {
-  const svg = document.createElementNS(svgns, 'svg');
+  svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('height', 200);
   svg.setAttribute('width', 200);
   svg.setAttribute('class', 'roulette');
