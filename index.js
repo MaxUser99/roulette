@@ -1,7 +1,7 @@
 const svgns = "http://www.w3.org/2000/svg";
 
 const options = [
-  { text: 'second asdf', weight: 1 },
+  { text: 'second fd', weight: 1 },
   { text: 'first', weight: 1 },
   { text: 'first', weight: 2 },
   { text: 'second', weight: 1 },
@@ -82,13 +82,14 @@ function getDecorativeCircles() {
 function getSection(weight, offset, text, id) {
   const rotateDeg = 360 * offset;
   const textId = `line${id}`;
+  const color = getRandomColor();
 
   const circle = document.createElementNS(svgns, 'circle');
   circle.setAttribute('r', 50);
   circle.setAttribute('cx', 100);
   circle.setAttribute('cy', 100);
   circle.setAttribute('fill', 'transparent');
-  circle.setAttribute('stroke', getRandomColor());
+  circle.setAttribute('stroke', color);
   circle.setAttribute('stroke-width', 100);
   circle.setAttribute('stroke-dasharray', `calc(${weight} * ${Math.PI} * 100) calc(${Math.PI} * 100)`);
   circle.setAttribute('transform-origin', 'center');
@@ -118,6 +119,8 @@ function getSection(weight, offset, text, id) {
   const textEl = document.createElementNS(svgns, 'text');
   textEl.setAttribute('x', '25%');
   textEl.setAttribute('text-anchor', 'middle');
+  textEl.setAttribute('fill', getContrastYIQ(color));
+  textEl.setAttribute('font-family', "'Lucida Grande', sans-serif");
   textEl.appendChild(textPath);
 
   return {
@@ -129,10 +132,18 @@ function getSection(weight, offset, text, id) {
 }
 
 function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
+  const letters = '0123456789ABCDEF';
+  let color = '#';
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
+}
+
+function getContrastYIQ(hexcolor) {
+  const r = parseInt(hexcolor.substr(1, 2), 16);
+  const g = parseInt(hexcolor.substr(3, 2), 16);
+  const b = parseInt(hexcolor.substr(5, 2), 16);
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+  return (yiq >= 128) ? 'black' : 'white';
 }
