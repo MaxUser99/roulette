@@ -1,3 +1,7 @@
-p {
-  color: red;
+:root {
+  --transition-duration: 2s;
+}
+
+.roulette {
+  transition: var(--transition-duration) ease;
 }

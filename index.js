@@ -1,19 +1,35 @@
 const svgns = "http://www.w3.org/2000/svg";
 
 const options = [
-  { text: 'second asdf', weight: 3 },
-  { text: 'first', weight: 2 },
+  { text: 'second asdf', weight: 1 },
+  { text: 'first', weight: 1 },
   { text: 'first', weight: 2 },
   { text: 'second', weight: 1 },
   { text: 'third', weight: 1.5 },
 ];
 
 createSvg();
+initializeButton();
+
+function initializeButton() {
+  const button = document.querySelector('button');
+  let deg = 0;
+  button.onclick = () => {
+    const duration = 1500 + Math.random() * 1000;
+    document.documentElement.style.setProperty('--transition-duration', duration + 'ms')
+
+    deg += 20 * Math.abs(Math.round(Math.random() * 500));
+    const css = '-webkit-transform: rotate(' + deg + 'deg);';
+    const svg = document.querySelector('.roulette');
+    svg.setAttribute('style', css);
+  };
+}
 
 function createSvg() {
   const svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('height', 200);
   svg.setAttribute('width', 200);
+  svg.setAttribute('class', 'roulette');
 
   let offset = -0.25;
   const totalSum = options.reduce((acc, current) => acc + current.weight, 0);
@@ -60,7 +76,7 @@ function getDecorativeCircles() {
   borderCircle.setAttribute('stroke', 'black');
   borderCircle.setAttribute('stroke-width', '2px');
 
-  return [ centerCircle, borderCircle ];
+  return [centerCircle, borderCircle];
 }
 
 function getSection(weight, offset, text, id) {
