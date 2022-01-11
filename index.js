@@ -24,9 +24,14 @@ function createSvg() {
 
   options.forEach((option, i) => {
     const optionWeight = option.weight / totalSum;
-    const { circle, line, text } = getSection(optionWeight, offset, option.text, i);
+    const {
+      circle,
+      line,
+      text,
+      separatorLine
+    } = getSection(optionWeight, offset, option.text, i);
     sections.push(circle);
-    lines.push(line);
+    lines.push(line, separatorLine);
     textElements.push(text);
     offset += optionWeight;
   });
@@ -34,7 +39,28 @@ function createSvg() {
   svg.append(...sections);
   svg.append(...lines);
   svg.append(...textElements);
+  svg.append(...getDecorativeCircles());
   document.body.appendChild(svg);
+}
+
+function getDecorativeCircles() {
+  const centerCircle = document.createElementNS(svgns, 'circle');
+  centerCircle.setAttribute('r', 10);
+  centerCircle.setAttribute('cx', 100);
+  centerCircle.setAttribute('cy', 100);
+  centerCircle.setAttribute('fill', 'white');
+  centerCircle.setAttribute('stroke', 'black');
+  centerCircle.setAttribute('stroke-width', '4px');
+
+  const borderCircle = document.createElementNS(svgns, 'circle');
+  borderCircle.setAttribute('r', 99);
+  borderCircle.setAttribute('cx', 100);
+  borderCircle.setAttribute('cy', 100);
+  borderCircle.setAttribute('fill', 'transparent');
+  borderCircle.setAttribute('stroke', 'black');
+  borderCircle.setAttribute('stroke-width', '2px');
+
+  return [ centerCircle, borderCircle ];
 }
 
 function getSection(weight, offset, text, id) {
@@ -51,6 +77,14 @@ function getSection(weight, offset, text, id) {
   circle.setAttribute('stroke-dasharray', `calc(${weight} * ${Math.PI} * 100) calc(${Math.PI} * 100)`);
   circle.setAttribute('transform-origin', 'center');
   circle.setAttribute('transform', `rotate(${rotateDeg})`);
+
+  const separatorLine = document.createElementNS(svgns, 'line');
+  separatorLine.setAttribute('fill', 'none');
+  separatorLine.setAttribute('stroke', 'black');
+  separatorLine.setAttribute('x1', 100);
+  separatorLine.setAttribute('y1', 100);
+  separatorLine.setAttribute('x2', 100 + 100 * Math.cos(offset * 2 * Math.PI));
+  separatorLine.setAttribute('y2', 100 + 100 * Math.sin(offset * 2 * Math.PI));
 
   const line = document.createElementNS(svgns, 'path');
   line.setAttribute('id', textId);
@@ -70,7 +104,12 @@ function getSection(weight, offset, text, id) {
   textEl.setAttribute('text-anchor', 'middle');
   textEl.appendChild(textPath);
 
-  return { circle, line, text: textEl };
+  return {
+    circle,
+    line,
+    separatorLine,
+    text: textEl
+  };
 }
 
 function getRandomColor() {
