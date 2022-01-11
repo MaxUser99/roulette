@@ -1,11 +1,11 @@
 const svgns = "http://www.w3.org/2000/svg";
 
 const options = [
-  { text: 'first', weight: 2 },
+  { text: 'second asdf', weight: 3 },
   { text: 'first', weight: 2 },
   { text: 'first', weight: 2 },
   { text: 'second', weight: 1 },
-  { text: 'third', weight: 1 },
+  { text: 'third', weight: 1.5 },
 ];
 
 createSvg();
@@ -55,7 +55,6 @@ function getSection(weight, offset, text, id) {
   const line = document.createElementNS(svgns, 'path');
   line.setAttribute('id', textId);
   line.setAttribute('fill', 'none');
-  line.setAttribute('stroke', 'black');
   const x0 = 100,
     y0 = 100,
     x1 = 100 + 100 * Math.cos((offset + weight / 2) * 2 * Math.PI),
@@ -67,7 +66,8 @@ function getSection(weight, offset, text, id) {
   textPath.innerHTML = text;
 
   const textEl = document.createElementNS(svgns, 'text');
-  // textEl.setAttribute('textLength', '50%')
+  textEl.setAttribute('x', '25%');
+  textEl.setAttribute('text-anchor', 'middle');
   textEl.appendChild(textPath);
 
   return { circle, line, text: textEl };
