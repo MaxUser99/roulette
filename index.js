@@ -42,6 +42,10 @@ function calcWinner(deg) {
   const predicates = getBounds();
   const winnerPos = predicates.findIndex(predicate => predicate(res));
   console.log('winner: ', winnerPos);
+  // logic to show winner
+  const p = document.createElement('p');
+  p.innerText = 'winner: ' + JSON.stringify(options[winnerPos]);
+  document.body.appendChild(p);
 }
 
 function getBounds() {
