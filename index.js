@@ -2,11 +2,11 @@ const svgns = "http://www.w3.org/2000/svg";
 let svg;
 
 const options = [
-  { text: 'second fd', weight: 1 },
-  { text: 'first', weight: 1 },
   { text: 'first', weight: 2 },
   { text: 'second', weight: 1 },
-  { text: 'third', weight: 1.5 },
+  { text: 'third', weight: 1 },
+  { text: 'fourth', weight: 1.5 },
+  { text: 'fifth', weight: 2.1 },
 ];
 
 createSvg();
@@ -36,10 +36,28 @@ function initializeButton() {
 }
 
 function calcWinner(deg) {
-  console.log('show winner: ', deg);
   const spins = Math.floor(deg / 360);
   const left = deg - spins * 360;
-  console.log(left)
+  const res = 360 - left;
+  const predicates = getBounds();
+  const winnerPos = predicates.findIndex(predicate => predicate(res));
+  console.log('winner: ', winnerPos);
+}
+
+function getBounds() {
+  const totalWeight = options.reduce((acc, { weight }) => acc + weight, 0);
+  let offset = 0;
+
+  return options.map((option, i) => {
+    const optionMaxDeg = option.weight / totalWeight * 360;
+    const predicate = getPredicate(offset, optionMaxDeg + offset, i === 0);
+    predicates.push(predicate);
+    offset += optionMaxDeg;
+  });
+}
+
+function getPredicate(min, max, isFirst) {
+  return (left) => (isFirst && left === 360) || (min <= left && left < max);
 }
 
 function rotate(duration, deg) {
@@ -109,7 +127,6 @@ function getSection(weight, offset, text, id) {
   const rotateDeg = 360 * offset;
   const textId = `line${id}`;
   const color = getRandomColor();
-  console.log(rotateDeg, weight)
   const circle = document.createElementNS(svgns, 'circle');
   circle.setAttribute('r', 50);
   circle.setAttribute('cx', 100);
