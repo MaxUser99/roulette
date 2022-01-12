@@ -17,8 +17,8 @@ function initializeButton() {
 
   const spinButton = document.querySelector('#spin-button');
   spinButton.onclick = () => {
-    const duration = 1500 + Math.random() * 1000;
-    deg += 20 * Math.abs(Math.round(Math.random() * 500));
+    const duration = 5500 + Math.random() * 1000;
+    deg += 3600 + 20 * Math.abs(Math.round(Math.random() * 500));
     rotate(duration, deg).then(() => calcWinner(deg));
   };
 
@@ -30,6 +30,7 @@ function initializeButton() {
     rotate(resetDuration, deg);
     setTimeout(() => {
       svg.setAttribute('style', 'transition: 0s');
+      deg = 0;
     }, resetDuration);
   };
 }

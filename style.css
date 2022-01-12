@@ -3,5 +3,6 @@
 }
 
 .roulette {
-  transition: var(--transition-duration) ease;
+  /* transition: var(--transition-duration) ease-in-out; */
+  transition: var(--transition-duration) cubic-bezier(0.22, 0.19, 0.21, 1.01);
 }
