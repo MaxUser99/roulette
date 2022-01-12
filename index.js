@@ -19,7 +19,7 @@ function initializeButton() {
   spinButton.onclick = () => {
     const duration = 1500 + Math.random() * 1000;
     deg += 20 * Math.abs(Math.round(Math.random() * 500));
-    rotate(duration, deg);
+    rotate(duration, deg).then(() => calcWinner(deg));
   };
 
   const resetButton = document.querySelector('#reset-button');
@@ -34,10 +34,20 @@ function initializeButton() {
   };
 }
 
+function calcWinner(deg) {
+  console.log('show winner: ', deg);
+  const spins = Math.floor(deg / 360);
+  const left = deg - spins * 360;
+  console.log(left)
+}
+
 function rotate(duration, deg) {
   document.documentElement.style.setProperty('--transition-duration', duration + 'ms');
   const css = '-webkit-transform: rotate(' + deg + 'deg);';
   svg.setAttribute('style', css);
+  return new Promise(r => {
+    setTimeout(() => r(), duration);
+  });
 }
 
 function createSvg() {
@@ -98,7 +108,7 @@ function getSection(weight, offset, text, id) {
   const rotateDeg = 360 * offset;
   const textId = `line${id}`;
   const color = getRandomColor();
-
+  console.log(rotateDeg, weight)
   const circle = document.createElementNS(svgns, 'circle');
   circle.setAttribute('r', 50);
   circle.setAttribute('cx', 100);
