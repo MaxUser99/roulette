@@ -51,8 +51,8 @@ function getBounds() {
   return options.map((option, i) => {
     const optionMaxDeg = option.weight / totalWeight * 360;
     const predicate = getPredicate(offset, optionMaxDeg + offset, i === 0);
-    predicates.push(predicate);
     offset += optionMaxDeg;
+    return predicate;
   });
 }
 
